@@ -6,7 +6,6 @@ import {CreateRoleDto} from "./dtos/ceate-role.dto";
 import {UpdateRoleDto} from "./dtos/update-role.dto";
 import {BaseService} from "../common/services/base.service";
 import {PaginatedResponseDto, PaginationDto} from "../common/models/pagination-dto";
-import {PermissionEntity} from "../permission/permission.entity";
 
 @Injectable()
 export class RolesService extends  BaseService<RoleEntity>{
@@ -40,7 +39,8 @@ export class RolesService extends  BaseService<RoleEntity>{
     async create(dto: CreateRoleDto): Promise<RoleEntity> {
         const role = this.roleRepository.create({
             name: dto.name,
-            description: dto.description
+            description: dto.description,
+            key:dto.key
         });
         return this.roleRepository.save(role);
     }
