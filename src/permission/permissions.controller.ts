@@ -1,12 +1,13 @@
-import {Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query} from "@nestjs/common";
+import {Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards} from "@nestjs/common";
 import {PermissionsService} from "./permissions.service";
 import {ApiTags} from "@nestjs/swagger";
 import {ApiBaseResponseDecorator} from "../common/decorators/api-base-response.decorator";
 import {PaginatedResponseDto, PaginationDto} from "../common/models/pagination-dto";
-import {UserEntity} from "../users/user.entity";
 import {PermissionEntity} from "./permission.entity";
 import {PermissionCreateDto} from "./dtos/PermissionCreateDto";
 import {PermissionUpdateDto} from "./dtos/PermissionUpdateDto";
+import {PermissionsGuard} from "./permissions.guard";
+import {PermissionsDecorator} from "./permissions.decorator";
 
 @ApiTags('Permissions')
 @Controller('permissions')
@@ -15,6 +16,9 @@ export class PermissionsController {
     }
 
     @ApiBaseResponseDecorator(PaginatedResponseDto<PermissionEntity>)
+
+    @UseGuards(PermissionsGuard) // Guard'ı route'a uygula
+    @PermissionsDecorator('permission_list')
     @Get('paginated')
     async findAllPaginated(@Query() paginationDto: PaginationDto) {
         return this.permissionsService.listPaginated({...paginationDto});

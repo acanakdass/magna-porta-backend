@@ -16,9 +16,9 @@ export class PermissionsGuard implements CanActivate {
         if (!requiredPermissions) {
             return true;
         }
-
         const request = context.switchToHttp().getRequest();
         const user = request.user;
+console.log(user)
 
         if (!user || !user.permissions) {
             throw new ForbiddenException('User does not have sufficient permissions');

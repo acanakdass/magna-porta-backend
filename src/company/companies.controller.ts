@@ -44,9 +44,4 @@ export class CompaniesController {
   async delete(@Param('id') id: number) {
     return this.service.delete(id);
   }
-
-  // @Patch(':id/activate')
-  // async activate(@Param('id') id: number) {
-  //   return this.service.activate(id);
-  // }
 }
