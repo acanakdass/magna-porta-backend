@@ -73,7 +73,7 @@ console.log("token: "+token )
 
                 // Log error details
                 console.error('Error retrieving connected accounts:', {
-                    message: error.message,
+                    message: error.message + " "+ error.response?.data?.message,
                     status: error.response?.status,
                     data: error.response?.data,
                     attempt: retries + 1,

@@ -27,7 +27,9 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
         //todo add loggin to db or file or seq...
         console.error(`[${status}] ${request.method} ${request.url}`);
         console.error('Exception message:', exception.message || message);
-
+console.info("error handler working: "+message)
+console.info("error handler working2: "+exception)
+console.error(JSON.stringify(exception))
         var errResult= new BaseApiResponse<any>()
         errResult.success=false;
         errResult.message=message as string;
