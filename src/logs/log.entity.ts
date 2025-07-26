@@ -46,6 +46,9 @@ export class LogEntity extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, any>;
 
+  @Column({ type: 'jsonb', nullable: true })
+  responseBody: Record<string, any>;
+
   @Column({ nullable: true })
   transactionId?: string;
 

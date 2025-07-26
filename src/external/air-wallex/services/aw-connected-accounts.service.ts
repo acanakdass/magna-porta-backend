@@ -3,13 +3,15 @@ import axios, {AxiosInstance} from 'axios';
 import {airwallexConfig} from '../config';
 import {AwAuthService} from "./aw-auth.service";
 import {AwGetConnectedAccountsRequest} from '../dtos/aw-account-dtos/aw-get-connected-accounts-request';
+import {AwConnectedAccountsResponse} from "../dtos/aw-account-dtos/aw-connected-accounts-response";
+import {BaseApiResponse} from "../../../common/dto/api-response-dto";
 
 
 @Injectable()
 export class AwConnectedAccountsService {
     private client: AxiosInstance;
     private maxRetries: number = 3;
-    params
+
     constructor(private readonly authService: AwAuthService) {
         this.client = axios.create({
             timeout: 10000, // 10 seconds timeout
@@ -24,7 +26,7 @@ export class AwConnectedAccountsService {
      * @param request - Data transfer object for retrieving connected accounts
      * @returns Promise resolving to ConnectedAccountsResponse
      */
-    async getConnectedAccounts(request: AwGetConnectedAccountsRequest): Promise<any> {
+    async getConnectedAccounts(request: AwGetConnectedAccountsRequest): Promise<BaseApiResponse<AwConnectedAccountsResponse>> {
         let retries = 0;
         let lastError: any = null;
 
@@ -35,7 +37,7 @@ export class AwConnectedAccountsService {
                 if (!token) {
                     throw new Error('Authentication token is null or undefined');
                 }
-console.log("token: "+token )
+                console.log("token: " + token)
                 console.log(`Making Airwallex Connected Accounts API request (Attempt: ${retries + 1})`);
 
                 // Create query parameters using DTO fields
@@ -52,7 +54,8 @@ console.log("token: "+token )
                 const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
 
                 const response = await this.client.request({
-                    url: `${airwallexConfig.baseUrl}/api/v1/accounts${queryString}`,
+                    // url: `${airwallexConfig.baseUrl}/api/v1/accounts${queryString}`,
+                    url: `${airwallexConfig.baseUrl}/api/v1/accounts`,
                     method: 'get',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -65,7 +68,13 @@ console.log("token: "+token )
                 if (response.data && Array.isArray(response.data.items)) {
                     console.log('Connected Accounts successfully retrieved:', response.data.items.length);
                     return response.data;
+                    return {
+                        data: response.data,
+                        message: "success",
+                        success: true
+                    } as BaseApiResponse<AwConnectedAccountsResponse>;
                 } else {
+                    console.error('API did not provide a valid response:', response.data);
                     throw new Error('API did not provide a valid response.');
                 }
             } catch (error: any) {
@@ -73,11 +82,12 @@ console.log("token: "+token )
 
                 // Log error details
                 console.error('Error retrieving connected accounts:', {
-                    message: error.message + " "+ error.response?.data?.message,
+                    message: error.message + " " + error.response?.data?.message,
                     status: error.response?.status,
                     data: error.response?.data,
                     attempt: retries + 1,
                 });
+
 
                 // For authentication errors or rate limiting, wait before retrying
                 if (error.response?.status === 401 || error.response?.status === 429) {
@@ -89,9 +99,20 @@ console.log("token: "+token )
             }
         }
 
+
         // If all retries failed, throw the last error
         console.error('Maximum number of retries reached. Could not retrieve connected accounts.');
-        throw lastError || new Error('Could not retrieve connected accounts. Maximum number of retries reached.');
+        return {
+            data: null,
+            message: lastError.message,
+            success: false
+        } as BaseApiResponse<AwConnectedAccountsResponse>;
+        // var result = new BaseApiResponse<AwConnectedAccountsResponse>();
+        // result.data == null;
+        // result.message = lastError.message;
+        // result.success = false;
+        // return result;
+        // throw lastError || new Error('Could not retrieve connected accounts. Maximum number of retries reached.');
     }
 
 

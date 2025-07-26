@@ -28,7 +28,7 @@ export class CompaniesService extends BaseService<CompanyEntity> {
     async createCompany(createCompanyDto: CreateCompanyDto): Promise<CompanyEntity> {
 
 
-        console.log(createCompanyDto)
+        // console.log(createCompanyDto)
         const entity = Object.assign(new CompanyEntity(), createCompanyDto);
         entity.isVerified = false;
         entity.isActive = false;

@@ -8,9 +8,12 @@ import {PermissionCreateDto} from "./dtos/PermissionCreateDto";
 import {PermissionUpdateDto} from "./dtos/PermissionUpdateDto";
 import {PermissionsGuard} from "./permissions.guard";
 import {PermissionsDecorator} from "./permissions.decorator";
+import {JwtAuthGuard} from "../common/guards/jwt-auth.guard";
+import {RolesGuard} from "../common/guards/roles.guard";
 
 @ApiTags('Permissions')
 @Controller('permissions')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class PermissionsController {
     constructor(private readonly permissionsService: PermissionsService) {
     }

@@ -6,6 +6,6 @@ import { LogEntity} from './log.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([LogEntity])],
   providers: [LogsService],
-  exports: [LogsService],
+  exports: [LogsService,TypeOrmModule],
 })
 export class LogsModule {}

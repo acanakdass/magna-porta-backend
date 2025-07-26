@@ -51,4 +51,8 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: true })
   @IsNotEmpty()
   companyId: number;
+
+  @Column({ default: false })
+  @IsNotEmpty()
+  scaSetup: boolean;
 }

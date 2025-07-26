@@ -11,7 +11,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const { method, url } = req;
 
     return next.handle().pipe(
-      tap(() => this.logsService.logRequest(method, url))
+      // tap(() => this.logsService.createLog(method, url))
     );
   }
 }

@@ -66,18 +66,18 @@ export class AirwallexClient {
       };
       
       // Log the headers for debugging (excluding sensitive information)
-      console.log('Request headers:', {
-        ...Object.keys(mergedHeaders).reduce((acc, key) => {
-          if (key === 'Authorization') {
-            acc[key] = 'Bearer [REDACTED]';
-          } else if (key === 'x-api-key') {
-            acc[key] = '[REDACTED]';
-          } else {
-            acc[key] = mergedHeaders[key];
-          }
-          return acc;
-        }, {} as Record<string, string>),
-      });
+      // console.log('Request headers:', {
+      //   ...Object.keys(mergedHeaders).reduce((acc, key) => {
+      //     if (key === 'Authorization') {
+      //       acc[key] = 'Bearer [REDACTED]';
+      //     } else if (key === 'x-api-key') {
+      //       acc[key] = '[REDACTED]';
+      //     } else {
+      //       acc[key] = mergedHeaders[key];
+      //     }
+      //     return acc;
+      //   }, {} as Record<string, string>),
+      // });
       
       const config: AxiosRequestConfig = {
         url: `${this.baseUrl}${endpoint}`,
@@ -92,7 +92,7 @@ export class AirwallexClient {
       
       console.log(`Making ${method.toUpperCase()} request to ${endpoint}`);
       const response: AxiosResponse<T> = await axios(config);
-      console.log(`Response received from ${endpoint}:`, response.status);
+      // console.log(`Response received from ${endpoint}:`, response.status);
       
       return response.data;
     } catch (error: any) {

@@ -12,25 +12,27 @@ import {BaseApiResponse} from "../common/dto/api-response-dto";
 export class AuthService {
     constructor(private usersService: UsersService,
                 private jwtService: JwtService,
-                private  rolesService:RolesService
+                private rolesService: RolesService
     ) {
     }
 
     async validateUser(email: string, pass: string) {
         const user = await this.usersService.findOneDynamic(
-            {email:email, isActive:true},
+            {email: email, isActive: true},
             ['role', 'role.permissions'],
         );
-        if (user ) {
-            console.log("success")
-            return user;
+        if (user) {
+            let isHashMatched = await bcrypt.compare(pass, user.password)
+            if (isHashMatched) {
+                return user;
+            }
         }
         throw new UnauthorizedException('Invalid credentials');
     }
 
     async login(dto: LoginDto): Promise<BaseApiResponse<LoginResponseDto>> {
         const user = await this.validateUser(dto.email, dto.password);
-        console.log('JWT Secret:', process.env.JWT_SECRET);
+        // console.log('JWT Secret:', process.env.JWT_SECRET);
         const payload = {email: user.email, sub: user.id};
         return {
             message: "Login Success",
@@ -47,9 +49,9 @@ export class AuthService {
         if (!role) {
             throw new Error('Role not found');
         }
-        let createRes =await this.usersService.createUser({
+        let createRes = await this.usersService.createUser({
             ...createUserDto,
-            roleEntity:role,
+            roleEntity: role,
         });
 
         return {
@@ -57,7 +59,7 @@ export class AuthService {
             success: true,
             data: {
                 email: createRes.email,
-                roleName:role.name
+                roleName: role.name
             }
         };
     }

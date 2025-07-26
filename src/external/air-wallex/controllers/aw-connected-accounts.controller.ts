@@ -16,14 +16,14 @@ export class AwConnectedAccountsController {
      * Accepts request body for query parameters
      */
     @ApiBaseResponseDecorator(BaseApiResponse<AwConnectedAccountsResponse>)
-    @Post()
+    @Post("/list")
     async getConnectedAccounts(@Body() request: AwGetConnectedAccountsRequest):Promise<BaseApiResponse<AwConnectedAccountsResponse>> {
         const res = await this.connectedAccountsService.getConnectedAccounts(request);
-        const result = new BaseApiResponse<AwConnectedAccountsResponse>();
-        result.data=res;
-        result.message="success";
-        result.success=true;
-        return result;
+        // const result = new BaseApiResponse<AwConnectedAccountsResponse>();
+        // result.data=res;
+        // result.message="success";
+        // result.success=true;
+        return res;
     }
 
     /**

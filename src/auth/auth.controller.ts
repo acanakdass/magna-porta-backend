@@ -39,7 +39,7 @@ export class AuthController {
     },
   })
   async login(@Body() loginDto: LoginDto): Promise<BaseApiResponse<LoginResponseDto>> {
-    console.log(loginDto);
+    // console.log(loginDto);
     return this.authService.login(loginDto);
   }
 

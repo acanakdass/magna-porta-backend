@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {MiddlewareConsumer, Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule} from '@nestjs/config';
 import {AuthModule} from './auth/auth.module';
@@ -10,6 +10,8 @@ import {ExternalModule} from "./external/external.module";
 import {CompaniesModule} from "./company/companies.module";
 import {APP_FILTER} from "@nestjs/core";
 import {GlobalHttpExceptionFilter} from "./common/filters/global-http-exception.filter";
+// import {GlobalLogFilter} from "./common/filters/global-log.filter";
+import {LoggingMiddleware} from "./common/middlewares/logging.middleware";
 
 @Module({
     providers:[
@@ -17,6 +19,10 @@ import {GlobalHttpExceptionFilter} from "./common/filters/global-http-exception.
             provide:APP_FILTER,
             useClass:GlobalHttpExceptionFilter
         }
+        // , {
+        //     provide:APP_FILTER,
+        //     useClass:GlobalLogFilter
+        // }
     ],
     imports: [
         ConfigModule.forRoot({isGlobal: true}),
@@ -41,4 +47,7 @@ import {GlobalHttpExceptionFilter} from "./common/filters/global-http-exception.
     ],
 })
 export class AppModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(LoggingMiddleware).forRoutes('*'); // Tüm rotalar için
+    }
 }
